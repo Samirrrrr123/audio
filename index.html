@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аудио, видео и графика</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .controls {
+            margin: 15px 0;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        
+        canvas {
+            border: 2px solid #2c3e50;
+            background: white;
+            display: block;
+            margin: 10px 0;
+        }
+        
+        input[type="range"] {
+            width: 150px;
+            margin: 0 10px;
+        }
+        
+        .media-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .media-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        video, audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            margin: 10px 0;
+            border: 2px dashed #ccc;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .filter-btn {
+            background: #9b59b6;
+        }
+        
+        .animation-controls {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Работа с аудио, видео и изображениями</h1>
+    
+    <div class="section">
+        <h2>1. Аудио и видео</h2>
+        
+        <div class="media-container">
+            <div class="media-box">
+                <h3>Видео плеер</h3>
+                <video id="myVideo" controls>
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео
+                </video>
+                <div class="controls">
+                    <button onclick="playVideo()">▶️ Воспроизвести</button>
+                    <button onclick="pauseVideo()">⏸️ Пауза</button>
+                    <button onclick="stopVideo()">⏹️ Стоп</button>
+                    <br>
+                    Громкость: <input type="range" id="videoVolume" min="0" max="1" step="0.1" value="1" onchange="changeVideoVolume()">
+                </div>
+            </div>
+            
+            <div class="media-box">
+                <h3>Аудио плеер</h3>
+                <audio id="myAudio" controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+                    Ваш браузер не поддерживает аудио
+                </audio>
+                <div class="controls">
+                    <button onclick="playAudio()">▶️ Воспроизвести</button>
+                    <button onclick="pauseAudio()">⏸️ Пауза</button>
+                    <button onclick="muteAudio()">🔇 Без звука</button>
+                    <br>
+                    Громкость: <input type="range" id="audioVolume" min="0" max="1" step="0.1" value="1" onchange="changeAudioVolume()">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Графика и анимация</h2>
+        
+        <canvas id="myCanvas" width="800" height="300"></canvas>
+        
+        <div class="animation-controls">
+            <button onclick="startAnimation()">▶️ Запустить анимацию</button>
+            <button onclick="stopAnimation()">⏸️ Остановить</button>
+            <button onclick="clearCanvas()">🧹 Очистить</button>
+            <br>
+            Скорость: <input type="range" id="speedControl" min="1" max="10" value="3" onchange="changeSpeed()">
+            Цвет: 
+            <button onclick="changeColor('red')" style="background:red">🔴</button>
+            <button onclick="changeColor('blue')" style="background:blue">🔵</button>
+            <button onclick="changeColor('green')" style="background:green">🟢</button>
+            <button onclick="changeColor('random')">🎨 Случайный</button>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Работа с изображениями</h2>
+        
+        <input type="file" id="imageUpload" accept="image/*" onchange="loadImage()">
+        
+        <div>
+            <img id="imagePreview" class="image-preview" alt="Превью">
+            <canvas id="imageCanvas" width="400" height="300"></canvas>
+        </div>
+        
+        <div class="filter-controls">
+            <h3>Фильтры:</h3>
+            <button onclick="applyFilter('gray')" class="filter-btn">⚫ Ч/Б</button>
+            <button onclick="applyFilter('sepia')" class="filter-btn">🟤 Сепия</button>
+            <button onclick="applyFilter('invert')" class="filter-btn">🔄 Инвертировать</button>
+            <button onclick="applyFilter('blur')" class="filter-btn">🌫️ Размытие</button>
+            <button onclick="applyFilter('original')" class="filter-btn">↩️ Оригинал</button>
+        </div>
+        
+        <div>
+            <button onclick="resizeImage(0.5)">📏 Уменьшить в 2 раза</button>
+            <button onclick="resizeImage(2)">📏 Увеличить в 2 раза</button>
+            <button onclick="cropImage()">✂️ Обрезать</button>
+            <button onclick="saveImage()">💾 Сохранить изображение</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Аудио и видео
+        const video = document.getElementById('myVideo');
+        const audio = document.getElementById('myAudio');
+        
+        function playVideo() {
+            video.play();
+        }
+        
+        function pauseVideo() {
+            video.pause();
+        }
+        
+        function stopVideo() {
+            video.pause();
+            video.currentTime = 0;
+        }
+        
+        function changeVideoVolume() {
+            video.volume = document.getElementById('videoVolume').value;
+        }
+        
+        function playAudio() {
+            audio.play();
+        }
+        
+        function pauseAudio() {
+            audio.pause();
+        }
+        
+        function muteAudio() {
+            audio.muted = !audio.muted;
+        }
+        
+        function changeAudioVolume() {
+            audio.volume = document.getElementById('audioVolume').value;
+        }
+        
+        // 2. Графика и анимация
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let animationId = null;
+        let x = 50;
+        let y = 150;
+        let dx = 3;
+        let dy = 2;
+        let circleColor = 'blue';
+        let speed = 3;
+        
+        function drawCircle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2);
+            ctx.fillStyle = circleColor;
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.fillStyle = 'black';
+            ctx.font = '16px Arial';
+            ctx.fillText('Двигающийся круг', 20, 30);
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(800, 150);
+            ctx.strokeStyle = '#ccc';
+            ctx.stroke();
+        }
+        
+        function animate() {
+            x += dx * (speed / 3);
+            y += dy * (speed / 3);
+            
+            if (x > canvas.width - 30 || x < 30) dx = -dx;
+            if (y > canvas.height - 30 || y < 30) dy = -dy;
+            
+            drawCircle();
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function startAnimation() {
+            if (!animationId) {
+                animate();
+            }
+        }
+        
+        function stopAnimation() {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function changeSpeed() {
+            speed = document.getElementById('speedControl').value;
+        }
+        
+        function changeColor(color) {
+            if (color === 'random') {
+                circleColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            } else {
+                circleColor = color;
+            }
+        }
+        
+        drawCircle();
+        
+        // 3. Работа с изображениями
+        const imageCanvas = document.getElementById('imageCanvas');
+        const imageCtx = imageCanvas.getContext('2d');
+        let currentImage = null;
+        
+        function loadImage() {
+            const file = document.getElementById('imageUpload').files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    currentImage = img;
+                    document.getElementById('imagePreview').src = e.target.result;
+                    drawImageOnCanvas(img);
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+        
+        function drawImageOnCanvas(img) {
+            imageCanvas.width = 400;
+            imageCanvas.height = 300;
+            imageCtx.drawImage(img, 0, 0, 400, 300);
+        }
+        
+        function applyFilter(filterType) {
+            if (!currentImage) return;
+            
+            drawImageOnCanvas(currentImage);
+            const imageData = imageCtx.getImageData(0, 0, imageCanvas.width, imageCanvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                if (filterType === 'gray') {
+                    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    data[i] = data[i + 1] = data[i + 2] = gray;
+                }
+                else if (filterType === 'sepia') {
+                    data[i] = r * 0.393 + g * 0.769 + b * 0.189;
+                    data[i + 1] = r * 0.349 + g * 0.686 + b * 0.168;
+                    data[i + 2] = r * 0.272 + g * 0.534 + b * 0.131;
+                }
+                else if (filterType === 'invert') {
+                    data[i] = 255 - r;
+                    data[i + 1] = 255 - g;
+                    data[i + 2] = 255 - b;
+                }
+                else if (filterType === 'blur') {
+                    // Простое размытие
+                    const avg = (r + g + b) / 3;
+                    data[i] = data[i + 1] = data[i + 2] = avg;
+                }
+            }
+            
+            imageCtx.putImageData(imageData, 0, 0);
+        }
+        
+        function resizeImage(scale) {
+            if (!currentImage) return;
+            
+            const newWidth = imageCanvas.width * scale;
+            const newHeight = imageCanvas.height * scale;
+            
+            imageCanvas.width = newWidth;
+            imageCanvas.height = newHeight;
+            imageCtx.drawImage(currentImage, 0, 0, newWidth, newHeight);
+        }
+        
+        function cropImage() {
+            if (!currentImage) return;
+            
+            imageCtx.drawImage(currentImage, 50, 50, 300, 200, 0, 0, 400, 300);
+        }
+        
+        function saveImage() {
+            if (!currentImage) {
+                alert('Сначала загрузите изображение');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'обработанное-изображение.png';
+            link.href = imageCanvas.toDataURL('image/png');
+            link.click();
+            alert('Изображение сохранено!');
+        }
+        
+        // Пример изображения по умолчанию
+        const defaultImg = new Image();
+        defaultImg.onload = function() {
+            currentImage = defaultImg;
+            drawImageOnCanvas(defaultImg);
+        }
+        defaultImg.src = 'https://picsum.photos/400/300';
+    </script>
+</body>
+</html>
